@@ -8,13 +8,15 @@ from pixel_classification.generate_rgb_data import read_pixels
 from pixel_classification import pixel_classifier
 import pickle
 from glob import glob
-
+import os,sys
+folder_path = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(folder_path, 'parameters.pkl')
 class PixelClassifier():
   def __init__(self):
     '''
 	    Initilize your classifier with any parameters and attributes you need
     '''
-    with open('parameters.pkl', 'rb') as f:
+    with open(model_path, 'rb') as f:
       params = pickle.load(f)
       
     self.mu_1, self.cov_1, self.mu_2, self.cov_2, self.mu_3, self.cov_3 = params[0],params[1],params[2], params[3], params[4], params[5]

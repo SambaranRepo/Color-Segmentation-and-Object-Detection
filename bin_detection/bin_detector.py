@@ -9,6 +9,9 @@ from skimage.measure import label, regionprops
 import pickle
 from glob import glob
 from matplotlib import pyplot as plt
+import sys,os
+folder_path = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(folder_path, 'bin_detection_rgb.pkl')
 
 
 class BinDetector():
@@ -18,7 +21,7 @@ class BinDetector():
 			e.g., parameters of your classifier
 		'''
 		
-		with open('bin_detection_rgb.pkl' , 'rb') as f: 
+		with open(model_path , 'rb') as f: 
 			params = pickle.load(f)
 
 		
