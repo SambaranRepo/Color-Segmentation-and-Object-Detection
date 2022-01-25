@@ -57,19 +57,3 @@ class PixelClassifier():
         '''
         return ((X - mu).T.dot(np.linalg.inv(cov)).dot(X - mu)) + np.log(np.linalg.det(cov)) - 2 * np.log(prior)
 
-
-if __name__ == '__main__':
-
-  folder = glob('pixel_classification/data/training')[0]
-  X1 = read_pixels(folder+'/red', verbose = True)
-  X2 = read_pixels(folder+'/green')
-  X3 = read_pixels(folder+'/blue')
-  y1, y2, y3 = np.full(X1.shape[0],1), np.full(X2.shape[0], 2), np.full(X3.shape[0],3)
-  X, y = np.concatenate((X1,X2,X3)), np.concatenate((y1,y2,y3))
-
-  pixel_classifier = pixel_classifier.PixelClassifier()
-  y_pred = pixel_classifier.classify(X)
-  # print(y_pred.shape)
-  # compare = np.stack([y_pred, y], axis = 1)
-  compare = np.mean(y == y_pred)
-  print(compare)
