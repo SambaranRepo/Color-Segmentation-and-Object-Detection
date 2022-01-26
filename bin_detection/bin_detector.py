@@ -42,7 +42,7 @@ class BinDetector():
 		'''
 		################################################################
 		# YOUR CODE AFTER THIS LINE
-		gamma = 0.6
+		gamma = 1.5
 		invGamma = 1.0 / gamma
 		correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 		img = cv2.LUT(img,correction_factor) 
