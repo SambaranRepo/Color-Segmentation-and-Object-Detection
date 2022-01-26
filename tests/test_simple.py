@@ -17,7 +17,7 @@ class TestPartialCredit(unittest.TestCase):
   def setUp(self):
     self.detector = BinDetector()
     self.classifier = PixelClassifier()
-    self.iou_thre = 0.75  # threshold for bounding box IOU
+    self.iou_thre = 0.5  # threshold for bounding box IOU
 
   def iou(self, box1, box2):
     '''
