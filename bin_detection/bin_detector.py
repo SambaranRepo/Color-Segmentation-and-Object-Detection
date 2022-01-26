@@ -12,7 +12,7 @@ from glob import glob
 from matplotlib import pyplot as plt
 import sys,os
 folder_path = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(folder_path, 'mog_rgb.pkl')
+model_path = os.path.join(folder_path, 'bin_detection_yuv.pkl')
 
 
 class BinDetector():
@@ -27,8 +27,8 @@ class BinDetector():
 
 		
 		self.mu_1, self.cov_1, self.mu_0, self.cov_0, self.prior_1, self.prior_0 = params[0], params[1], params[2], params[3], params[4], params[5]
-		# self.mu_1 = self.mu_1[:,None].T
-		# self.mu_0 = self.mu_0[:,None].T
+		self.mu_1 = self.mu_1[:,None].T
+		self.mu_0 = self.mu_0[:,None].T
 
 	def segment_image(self, img):
 		'''
@@ -47,31 +47,29 @@ class BinDetector():
 		# invGamma = 1.0 / gamma
 		# correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 		# img = cv2.LUT(img,correction_factor) 
-		img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-		img = img/255
-		
+		img = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
 		X = img.reshape((img.shape[0]*img.shape[1]), img.shape[2])
 		mask_img = np.zeros(img.shape[0]*img.shape[1], dtype = np.uint8)
 
 		step = 100
 		K = len(X)//step
-		# for i in range(K): 
-		# 	bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_1, self.cov_1, self.prior_1)
-		# 	non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_0, self.cov_0, self.prior_0)
-		# 	mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood < non_bin_likelihood
+		for i in range(K): 
+			bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_1, self.cov_1, self.prior_1)
+			non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_0, self.cov_0, self.prior_0)
+			mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood < non_bin_likelihood
 			
-		# bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_1, self.cov_1, self.prior_1)
-		# non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_0, self.cov_0, self.prior_0)
-		# mask_img[step*K : len(X)]  = bin_likelihood < non_bin_likelihood
+		bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_1, self.cov_1, self.prior_1)
+		non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_0, self.cov_0, self.prior_0)
+		mask_img[step*K : len(X)]  = bin_likelihood < non_bin_likelihood
 		
-		for i in (range(K)): 
-			bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1],  self.prior_1,self.mu_1, self.cov_1)
-			non_bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1], self.prior_0, self.mu_0, self.cov_0)
-			mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood > non_bin_likelihood
+		# for i in (range(K)): 
+		# 	bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1],  self.prior_1,self.mu_1, self.cov_1)
+		# 	non_bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1], self.prior_0, self.mu_0, self.cov_0)
+		# 	mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood > non_bin_likelihood
 			
-		bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_1, self.mu_1, self.cov_1)
-		non_bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_0, self.mu_0, self.cov_0)
-		mask_img[step*K : len(X)]  = bin_likelihood > non_bin_likelihood
+		# bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_1, self.mu_1, self.cov_1)
+		# non_bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_0, self.mu_0, self.cov_0)
+		# mask_img[step*K : len(X)]  = bin_likelihood > non_bin_likelihood
 
 		mask_img = mask_img.reshape(img.shape[0],img.shape[1])
 		
