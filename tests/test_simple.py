@@ -17,7 +17,7 @@ class TestPartialCredit(unittest.TestCase):
   def setUp(self):
     self.detector = BinDetector()
     self.classifier = PixelClassifier()
-    self.iou_thre = 0.5  # threshold for bounding box IOU
+    self.iou_thre = 0.75  # threshold for bounding box IOU
 
   def iou(self, box1, box2):
     '''
@@ -82,7 +82,6 @@ class TestPartialCredit(unittest.TestCase):
     if isinstance(score, np.ndarray):
       score = score[0]
     set_score(score)
-    print(f'Bin Detection score : {score}')
 
 
   # @timeout_decorator.timeout(5000)
@@ -101,7 +100,6 @@ class TestPartialCredit(unittest.TestCase):
     if isinstance(score, np.ndarray):
       score = score[0]
     set_score(score)
-    print(f'Pixel classification score : {score}')
 
 # if __name__ == '__main__':
 #   score = TestPartialCredit()

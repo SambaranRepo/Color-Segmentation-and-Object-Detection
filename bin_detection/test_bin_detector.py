@@ -35,6 +35,7 @@ def compare_boxes(true_boxes, estm_boxes):
   accuracy = 0.0
   for box1 in true_boxes:
     for box2 in estm_boxes:
+      intersection_over_union = iou(box1,box2)
       if iou(box1,box2) >= 0.5:
         accuracy += 1.0
         break

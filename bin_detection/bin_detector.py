@@ -11,7 +11,7 @@ from glob import glob
 from matplotlib import pyplot as plt
 import sys,os
 folder_path = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(folder_path, 'bin_detection_rgb.pkl')
+model_path = os.path.join(folder_path, 'bin_detection_yuv.pkl')
 
 
 class BinDetector():
@@ -42,11 +42,11 @@ class BinDetector():
 		'''
 		################################################################
 		# YOUR CODE AFTER THIS LINE
-		gamma = 4
+		gamma = 2
 		invGamma = 1.0 / gamma
 		correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 		img = cv2.LUT(img,correction_factor) 
-		img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+		img = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
 		
 			
 			
