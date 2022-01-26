@@ -12,7 +12,7 @@ from glob import glob
 from matplotlib import pyplot as plt
 import sys,os
 folder_path = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(folder_path, 'mog_yuv.pkl')
+model_path = os.path.join(folder_path, 'mog_yuv_2.pkl')
 
 
 class BinDetector():
