@@ -42,7 +42,7 @@ class BinDetector():
 		'''
 		################################################################
 		# YOUR CODE AFTER THIS LINE
-		gamma = 1.5
+		gamma = 2
 		invGamma = 1.0 / gamma
 		correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 		img = cv2.LUT(img,correction_factor) 
@@ -97,7 +97,6 @@ class BinDetector():
 		kernel = np.ones((5,5), np.uint8)
 		opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN,kernel)
 		blurred = cv2.GaussianBlur(opening, (7,7),0)
-		blurred = cv2.max(blurred, mask)
 		ret, thresh = cv2.threshold(blurred, 127, 255,0)
 		
 		boxes = []
