@@ -25,12 +25,11 @@ class GenerateColorData():
         '''
 
         n = len(next(os.walk(folder))[2])
-        print(f"Number of images : {n}")
         X_blue = np.empty([1,3], dtype = np.int32)
         X_neg = np.empty([1,3], dtype = np.int32)
 
         files = os.listdir(folder)
-        for i in range(32,50): 
+        for i in range(10): 
             file = files[i]
             img = cv2.imread(os.path.join(folder + file))
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -69,6 +68,7 @@ if __name__ == '__main__':
                 X_neg = np.concatenate([X_neg, X[1]], axis = 0)
             except EOFError: 
                 break
+    
     print(f"Number of samples in blue recycle bin : {X_pos.shape}")
     print(f"Number of samples in non blue recycle bin: {X_neg.shape}")
     

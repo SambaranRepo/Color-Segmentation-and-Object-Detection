@@ -7,11 +7,12 @@ import os,cv2
 import skimage
 from skimage.measure import label, regionprops
 import pickle
+from math import pi
 from glob import glob
 from matplotlib import pyplot as plt
 import sys,os
 folder_path = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(folder_path, 'bin_detection_yuv.pkl')
+model_path = os.path.join(folder_path, 'mog_rgb.pkl')
 
 
 class BinDetector():
@@ -26,8 +27,8 @@ class BinDetector():
 
 		
 		self.mu_1, self.cov_1, self.mu_0, self.cov_0, self.prior_1, self.prior_0 = params[0], params[1], params[2], params[3], params[4], params[5]
-		self.mu_1 = self.mu_1[:,None].T
-		self.mu_0 = self.mu_0[:,None].T
+		# self.mu_1 = self.mu_1[:,None].T
+		# self.mu_0 = self.mu_0[:,None].T
 
 	def segment_image(self, img):
 		'''
@@ -42,28 +43,36 @@ class BinDetector():
 		'''
 		################################################################
 		# YOUR CODE AFTER THIS LINE
-		gamma = 1
-		invGamma = 1.0 / gamma
-		correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
-		img = cv2.LUT(img,correction_factor) 
-		img = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
+		# gamma = 1
+		# invGamma = 1.0 / gamma
+		# correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+		# img = cv2.LUT(img,correction_factor) 
+		img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+		img = img/255
 		
-			
-			
 		X = img.reshape((img.shape[0]*img.shape[1]), img.shape[2])
 		mask_img = np.zeros(img.shape[0]*img.shape[1], dtype = np.uint8)
 
 		step = 100
 		K = len(X)//step
-		for i in range(K): 
-			bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_1, self.cov_1, self.prior_1)
-			non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_0, self.cov_0, self.prior_0)
-			mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood < non_bin_likelihood
+		# for i in range(K): 
+		# 	bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_1, self.cov_1, self.prior_1)
+		# 	non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*i : step*(i + 1) + 1], self.mu_0, self.cov_0, self.prior_0)
+		# 	mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood < non_bin_likelihood
 			
-		bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_1, self.cov_1, self.prior_1)
-		non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_0, self.cov_0, self.prior_0)
-		mask_img[step*K : len(X)]  = bin_likelihood < non_bin_likelihood
+		# bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_1, self.cov_1, self.prior_1)
+		# non_bin_likelihood = self.gaussian_posterior_likelihood(X[step*K : len(X)], self.mu_0, self.cov_0, self.prior_0)
+		# mask_img[step*K : len(X)]  = bin_likelihood < non_bin_likelihood
 		
+		for i in (range(K)): 
+			bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1],  self.prior_1,self.mu_1, self.cov_1)
+			non_bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1], self.prior_0, self.mu_0, self.cov_0)
+			mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood > non_bin_likelihood
+			
+		bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_1, self.mu_1, self.cov_1)
+		non_bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_0, self.mu_0, self.cov_0)
+		mask_img[step*K : len(X)]  = bin_likelihood > non_bin_likelihood
+
 		mask_img = mask_img.reshape(img.shape[0],img.shape[1])
 		
 		# YOUR CODE BEFORE THIS LINE
@@ -88,17 +97,16 @@ class BinDetector():
 		x_max, y_max = mask.shape[0], mask.shape[1]	
 			
 		mask *= 255
-		kernel = np.ones((3,3), np.uint8)
+		kernel = np.ones((5,5), np.uint8)
 		opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN,kernel)
-		# opening = cv2.erode(mask, kernel, iterations = 2)
-		blurred = cv2.GaussianBlur(opening, (3,3),0)
+		blurred = cv2.GaussianBlur(opening, (7,7),0)
 		blurred = cv2.max(blurred, mask)
 		ret, thresh = cv2.threshold(blurred, 127, 255,0)
-		
 		
 		boxes = []
 		similarity = []
 		contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+		
 		for cnt in contours:
 			approx = cv2.approxPolyDP(cnt,0.02*cv2.arcLength(cnt,True),True)
 			x,y,w,h = cv2.boundingRect(cnt)
@@ -123,3 +131,18 @@ class BinDetector():
 		'''
 		return np.diag(((X - mu).dot(np.linalg.inv(cov)).dot((X - mu).T))) + np.log(np.linalg.det(cov)) - 2 * np.log(prior)
 		
+	def mog_prob(self, x, prior, mu, cov): 
+		'''
+		'''
+		prob = np.zeros((len(x)))
+		for i in range(3): 
+			prob = np.add(prob, self.gaussian(x, mu[i], np.diag(cov[i])) * prior[i])
+		return prob
+	
+	def gaussian(self, x, mu, cov): 
+		'''
+		'''
+		d = np.shape(x)[1]
+		dr = 1/(np.sqrt((2* pi)**(d) * np.linalg.det(cov)))
+		nr = (np.exp(-np.diag((x - mu)@(np.linalg.inv(cov))@((x - mu).T) / 2)))
+		return nr * dr
