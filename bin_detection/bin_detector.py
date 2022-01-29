@@ -27,7 +27,8 @@ class BinDetector():
 
 		
 		self.mu_1, self.cov_1, self.mu_0, self.cov_0, self.prior_1, self.prior_0 = params[0], params[1], params[2], params[3], params[4], params[5]
-
+		self.p1 = 0.43
+		self.p0 = 1 - self.p1
 
 	def segment_image(self, img):
 		'''
@@ -62,12 +63,12 @@ class BinDetector():
 		# mask_img[step*K : len(X)]  = bin_likelihood < non_bin_likelihood
 		
 		for i in (range(K)): 
-			bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1],  self.prior_1,self.mu_1, self.cov_1)
-			non_bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1], self.prior_0, self.mu_0, self.cov_0)
+			bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1],  self.prior_1,self.mu_1, self.cov_1,self.p1)
+			non_bin_likelihood = self.mog_prob(X[step*i : step*(i + 1) + 1], self.prior_0, self.mu_0, self.cov_0,self.p0)
 			mask_img[step*i : step*(i + 1) + 1]  = bin_likelihood > non_bin_likelihood
 			
-		bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_1, self.mu_1, self.cov_1)
-		non_bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_0, self.mu_0, self.cov_0)
+		bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_1, self.mu_1, self.cov_1,self.p1)
+		non_bin_likelihood = self.mog_prob(X[step*K : len(X)], self.prior_0, self.mu_0, self.cov_0,self.p0)
 		mask_img[step*K : len(X)]  = bin_likelihood > non_bin_likelihood
 
 		mask_img = mask_img.reshape(img.shape[0],img.shape[1])
@@ -94,10 +95,10 @@ class BinDetector():
 		x_max, y_max = mask.shape[0], mask.shape[1]	
 			
 		mask *= 255
-		kernel = np.ones((3,3), np.uint8)
-		opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN,kernel)
-		blurred = cv2.GaussianBlur(opening, (3,3),0)
-		blurred = cv2.max(blurred, mask)
+		kernel = np.ones((13,13), np.uint8)
+		erode = cv2.erode(mask, kernel, iterations = 1)
+		dilation = cv2.dilate(erode, kernel[:7, :7], iterations = 1)
+		blurred = cv2.GaussianBlur(dilation, (3,3),0)
 		ret, thresh = cv2.threshold(blurred, 127, 255,0)
 		
 		boxes = []
@@ -110,7 +111,7 @@ class BinDetector():
 			area_ratio = cv2.contourArea(cnt)/(y_max*x_max)
 			similarity1 = 100 - np.absolute((h/w)-1.5)*100
 
-			if 0.8 <= h/w <= 1.7 and area_ratio > 0.002: 
+			if 0.85 <= h/w <= 1.9 and area_ratio > 0.002: 
 				boxes.append([x,y,x + w,y + h])
 				similarity1 = 100 - np.absolute((h/w)-1.5)*100
 				similarity.append(similarity1)
@@ -128,13 +129,13 @@ class BinDetector():
 		'''
 		return np.diag(((X - mu).dot(np.linalg.inv(cov)).dot((X - mu).T))) + np.log(np.linalg.det(cov)) - 2 * np.log(prior)
 		
-	def mog_prob(self, x, prior, mu, cov): 
+	def mog_prob(self, x, prior, mu, cov, p): 
 		'''
 		'''
 		prob = np.zeros((len(x)))
 		for i in range(3): 
 			prob = np.add(prob, self.gaussian(x, mu[i], np.diag(cov[i])) * prior[i])
-		return prob
+		return prob*p
 	
 	def gaussian(self, x, mu, cov): 
 		'''
