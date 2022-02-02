@@ -74,7 +74,7 @@ class TestPartialCredit(unittest.TestCase):
               l.append(int(e2))
       gt_boxes = []
       for j in range(int(len(l)/4)):
-        gt_boxes.append(l[j:j + 4]) # ground truth bottom left and top right coordinates
+        gt_boxes.append(l[4*j:4*j + 4]) # ground truth bottom left and top right coordinates
       mask_img = self.detector.segment_image(img)
       pred_boxes = self.detector.get_bounding_boxes(mask_img) # predicted coordinates
       score += self.compare_boxes(gt_boxes, pred_boxes)
