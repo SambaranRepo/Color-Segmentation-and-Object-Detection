@@ -58,9 +58,7 @@ class BinDetector():
 		'''
 		################################################################
 		# YOUR CODE AFTER THIS LINE
-		#gamma = 4 for rgb -> Score 19
-		#gamma = 2 for yuv -> Score 19
-		# 
+
 		if color_space == 'rgb':
 			if mode == 1:
 				gamma = 1
@@ -78,13 +76,13 @@ class BinDetector():
 			
 		elif color_space == 'yuv':
 			if mode == 1:
-				gamma = 1
+				gamma = 1.4
 				invGamma = 1.0 / gamma
 				correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 				img = cv2.LUT(img,correction_factor) 
 				img = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
 			elif mode == 2:
-				gamma = 1
+				gamma = 1.4
 				invGamma = 1.0 / gamma
 				correction_factor = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
 				img = cv2.LUT(img,correction_factor) 
