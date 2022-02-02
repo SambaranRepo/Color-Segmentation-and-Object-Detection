@@ -12,7 +12,8 @@ from glob import glob
 from matplotlib import pyplot as plt
 import sys,os
 
-color_space, mode = 'rgb', 2
+# color_space, mode = 'rgb', 2  Best with autograder and no morphology
+color_space, mode = 'yuv', 2
 folder_path = os.path.dirname(os.path.abspath(__file__))
 
 if color_space == 'rgb': 
