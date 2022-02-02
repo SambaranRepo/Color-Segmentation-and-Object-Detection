@@ -145,10 +145,10 @@ class BinDetector():
 			
 		mask *= 255
 		
-		kernel = np.ones((13,13), np.uint8)
-		erode = cv2.erode(mask, kernel, iterations = 1)
-		dilation = cv2.dilate(erode, kernel[:5,:5], iterations = 3)
-		blurred = cv2.GaussianBlur(dilation, (3,3),0)
+		# kernel = np.ones((13,13), np.uint8)
+		# erode = cv2.erode(mask, kernel, iterations = 1)
+		# dilation = cv2.dilate(erode, kernel[:5,:5], iterations = 3)
+		blurred = cv2.GaussianBlur(mask, (3,3),0)
 		ret, thresh = cv2.threshold(blurred, 127, 255,0)
 
 		boxes = []
