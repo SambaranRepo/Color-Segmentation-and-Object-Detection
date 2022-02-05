@@ -45,7 +45,7 @@ This script is used to train a mixture of gaussian model on the positive and neg
 algorithm, the model is trained on a minibatch once at a time. There are hence two modes of using this script : to train a model from the scratch(Mode 1) or to train a saved model using a new minibatch of data(Mode 2). Additionally, we need to give it an input x mentioning from which point we are picking up the data to train the model. Usage : 
 <pre>
 $python3 bin_detection/mog.py 1000 1  %Start training from scratch from 1000th data point
-$python3 bin_detection/mog.py 10000 2  %Continue training previously saved model from 20000th data point
+$python3 bin_detection/mog.py 10000 2 %Continue training previously saved model from 20000th data point
 </pre>
 
 ### e. bin_detector.py: 
@@ -54,7 +54,7 @@ This is the main script that is called to get the segmented image and the boundi
 $python3 bin_detection/bin_detector.py rgb 1 %Run a Gaussian Discriminant Model in rgb space 
 $python3 bin_detection/bin_detector.py rgb 2 %Run a Mixture of Gaussians Model in rgb space 
 $python3 bin_detection/bin_detector.py yuv 1 %Run a Gaussian Discriminant Model in yuv space 
-$python3 bin_detection/bin_detector.py yuv 2 % Run a Mixture of Gaussians Model in yuv space 
+$python3 bin_detection/bin_detector.py yuv 2 %Run a Mixture of Gaussians Model in yuv space 
 </pre>
 
 2. pixel_classification : This directory contains all code files to classify given pixel as a red, green or blue pixel. 
