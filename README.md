@@ -85,60 +85,60 @@ $python3 pixel_classifier/gaussian_classifier.py
 
 ### Case 1:
 <p float="left">
-  <img src="images/mask/0061.eps" width="49%" />
-  <img src="images/bin/0061.eps" width="49%" /> 
+  <img src="images/mask/0061.jpg" width="49%" />
+  <img src="images/bin/0061.jpg" width="49%" /> 
 </p>
 
 ### Case 2:
 <p float="left">
-  <img src="images/mask/0062.eps" width="49%" />
-  <img src="images/bin/0062.eps" width="49%" /> 
+  <img src="images/mask/0062.jpg" width="49%" />
+  <img src="images/bin/0062.jpg" width="49%" /> 
 </p>
 
 ### Case 3:
 <p float="left">
-  <img src="images/mask/0063.eps" width="49%" />
-  <img src="images/bin/0063.eps" width="49%" /> 
+  <img src="images/mask/0063.jpg" width="49%" />
+  <img src="images/bin/0063.jpg" width="49%" /> 
 </p>
 
 ### Case 4:
 <p float="left">
-  <img src="images/mask/0064.eps" width="49%" />
-  <img src="images/bin/0064.eps" width="49%" /> 
+  <img src="images/mask/0064.jpg" width="49%" />
+  <img src="images/bin/0064.jpg" width="49%" /> 
 </p>
 
 ### Case 5:
 <p float="left">
-  <img src="images/mask/0065.eps" width="49%" />
-  <img src="images/bin/0065.eps" width="49%" /> 
+  <img src="images/mask/0065.jpg" width="49%" />
+  <img src="images/bin/0065.jpg" width="49%" /> 
 </p>
 
 ### Case 6:
 <p float="left">
-  <img src="images/mask/0066.eps" width="49%" />
-  <img src="images/bin/0066.eps" width="49%" /> 
+  <img src="images/mask/0066.jpg" width="49%" />
+  <img src="images/bin/0066.jpg" width="49%" /> 
 </p>
 
 ### Case 7:
 <p float="left">
-  <img src="images/mask/0067.eps" width="49%" />
-  <img src="images/bin/0067.eps" width="49%" /> 
+  <img src="images/mask/0067.jpg" width="49%" />
+  <img src="images/bin/0067.jpg" width="49%" /> 
 </p>
 
 ### Case 8:
 <p float="left">
-  <img src="images/mask/0068.eps" width="49%" />
-  <img src="images/bin/0068.eps" width="49%" /> 
+  <img src="images/mask/0068.jpg" width="49%" />
+  <img src="images/bin/0068.jpg" width="49%" /> 
 </p>
 
 ### Case 9:
 <p float="left">
-  <img src="images/mask/0069.eps" width="49%" />
-  <img src="images/bin/0069.eps" width="49%" /> 
+  <img src="images/mask/0069.jpg" width="49%" />
+  <img src="images/bin/0069.jpg" width="49%" /> 
 </p>
 
 ### Case 10:
 <p float="left">
-  <img src="images/mask/0070.eps" width="49%" />
-  <img src="images/bin/0070.eps" width="49%" /> 
+  <img src="images/mask/0070.jpg" width="49%" />
+  <img src="images/bin/0070.jpg" width="49%" /> 
 </p>
