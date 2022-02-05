@@ -1,8 +1,19 @@
 ## About
+* The aim of the project is to given an image, draw bounding box around blue recycling bins. The proposed method is to first segment the image and then use the 
+segmented image to find out regions of interest using methods such as shape statistics and contours.  
 * We build a Gaussian Discriminant Model and a Mixture of Gaussian model to segment an image into blue and non-blue regions. 
 * A detector module then takes the segmented image as input, applies some morphology and smoothening operations on the segmented image. After that 
 we apply open-cv findContour and boundingRect methods to get contours along the blue areas in the image. Combined with some shape statistics, we filter 
 these regions into possible blue recycling bin regions and return the bounding boxes around these bins.
+
+## Environment Setup
+* To replicate the project, first build a conda environment using the provided ece276a.yaml file as follows : 
+<pre> $conda env create -f ece276a.yaml</pre>
+* Add the project path to PYTHONPATH environment variable as shown below : 
+<pre> $export PYTHONPATH=$/path_to/ECE_276A_PR1_Submission/$ </pre>
+* Finally activate the conda environment 
+<pre> $conda activate ece276a </pre>
+
 
 ## File Details
 Files are structured into two directories :- 
@@ -45,16 +56,15 @@ This script is used to train a mixture of gaussian model on the positive and neg
 algorithm, the model is trained on a minibatch once at a time. There are hence two modes of using this script : to train a model from the scratch(Mode 1) or to train a saved model using a new minibatch of data(Mode 2). Additionally, we need to give it an input x mentioning from which point we are picking up the data to train the model. Usage : 
 <pre>
 $python3 bin_detection/mog.py 1000 1  %Start training from scratch from 1000th data point
-$python3 bin_detection/mog.py 10000 2 %Continue training previously saved model from 20000th data point
+$python3 bin_detection/mog.py 10000 2 %Continue training previously saved model from 10000th data point
 </pre>
 
 ### e. bin_detector.py: 
-This is the main script that is called to get the segmented image and the bounding box of the blue bins in the given image. This code defines a class that has the methods segment_image and get_bounding_boxes that are used to get the masked image and the bounding boxes around the blue bins respectively.The code takes 2 inputs as arguments : the color space and the mode. Color space can either be rgb or yuv, mode is 1 for using a single gaussian discriminant model, and 2 for using a mixture of gaussian model. Usage : 
+This is the main script that is called to get the segmented image and the bounding box of the blue bins in the given image. This code defines a class that has the methods segment_image and get_bounding_boxes that are used to get the masked image and the bounding boxes around the blue bins respectively. Set color_space 
+either to 'rgb' or 'yuv' and mode to 1 or 2 in the line 15 of this script. Mode 1 runs a single Gaussian Discriminant model whereas mode 2 runs a Mixture of 
+Gaussians model. Usage : 
 <pre>
-$python3 bin_detection/bin_detector.py rgb 1 %Run a Gaussian Discriminant Model in rgb space 
-$python3 bin_detection/bin_detector.py rgb 2 %Run a Mixture of Gaussians Model in rgb space 
-$python3 bin_detection/bin_detector.py yuv 1 %Run a Gaussian Discriminant Model in yuv space 
-$python3 bin_detection/bin_detector.py yuv 2 %Run a Mixture of Gaussians Model in yuv space 
+$python3 bin_detection/bin_detector.py
 </pre>
 
 2. pixel_classification : This directory contains all code files to classify given pixel as a red, green or blue pixel. 
@@ -74,6 +84,35 @@ pixel_classification/
 This script is used to train a single gaussian discriminant model on the red, green and blue class examples. Usage : 
 <pre>
 $python3 pixel_classifier/gaussian_classifier.py
+</pre>
+
+## 3. run_tests.py
+This script can be used to compute the overall score of pixel classification and bin detection on the provided validation set. Usage : 
+<pre> $python3 run_tests.py </pre>
+<pre>
+color space : rgb
+Mode : Mixture of Gaussians
+{
+    "tests": [
+        {
+            "name": "Bin Detection",
+            "score": 10.0,
+            "max_score": 10.0,
+            "output": "Bin Detection score : 10.0\n"
+        },
+        {
+            "name": "Pixel Classifier",
+            "score": 10.0,
+            "max_score": 10.0,
+            "output": "Pixel classification score : 10.0\n"
+        }
+    ],
+    "leaderboard": [],
+    "visibility": "visible",
+    "stdout_visibility": "hidden",
+    "execution_time": "42.22",
+    "score": 20.0
+}
 </pre>
 
 
