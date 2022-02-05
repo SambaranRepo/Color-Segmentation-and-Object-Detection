@@ -9,7 +9,7 @@ Files are structured into two directories :-
 1. bin_detection : This directory contains all code files used to generate training data from the images using roipoly in the rgb and yuv space, 
 train the Gaussian Discriminant Model and the Mixture of Gaussians Model, and get the bounding boxes to the blue recycling in the image.
 
-'''bash
+'''
 bin_detection/
 ├── bin_detection_rgb.pkl
 ├── bin_detection_ycrcb.pkl
@@ -36,13 +36,32 @@ recycling bin pixels and a negative region containing blue pixels not belonging 
 ### b. generate_ycrcb_data.py: 
 This script is the same as generate_color_data.py, except that this generates the pixels in YUV space. 
 ### c. gaussian_classifier.py : 
-This script is used to train a single gaussian discriminant model on the positive and negative class examples. Usage : '''python3 bin_detection/gaussian_classifier.py'''
+This script is used to train a single gaussian discriminant model on the positive and negative class examples. Usage :
+ '''
+ $python3 bin_detection/gaussian_classifier.py
+ '''
 ### d. mog.py
 This script is used to train a mixture of gaussian model on the positive and negative class examples. Since expectation maximisation is a complex 
-algorithm, the model is trained on a minibatch once at a time. There are hence two modes of using this script : to train a model from the scratch(Mode 1) or to train a saved model using a new minibatch of data(Mode 2). Additionally, we need to give it an input x mentioning from which point we are picking up the data to train the model. Usage : '''python3 bin_detection/mog.py x mode''' where x > 0 and is an integer mentioning the start of the datapoint and mode = {1,2} mentioning which mode to train. 
+algorithm, the model is trained on a minibatch once at a time. There are hence two modes of using this script : to train a model from the scratch(Mode 1) or to train a saved model using a new minibatch of data(Mode 2). Additionally, we need to give it an input x mentioning from which point we are picking up the data to train the model. Usage : 
+'''
+$python3 bin_detection/mog.py x mode
+''' 
+where x > 0 and is an integer mentioning the start of the datapoint and mode = {1,2} mentioning which mode to train. 
+
 ### e. bin_detector.py: 
-This is the main script that is called to get the segmented image and the bounding box of the blue bins in the given image. This code defines a class that has the methods segment_image and get_bounding_boxes that are used to get the masked image and the bounding boxes around the blue bins respectively.The code takes 2 inputs as arguments : the color space and the mode. Color space can either be rgb or yuv, mode is 1 for using a single gaussian discriminant model, and 2 for using a mixture of gaussian model. Usage : '''python3 bin_detection/bin_detector.py rgb 1''', '''python3 bin_detection/bin_detector.py rgb 2''',
-'''python3 bin_detection/bin_detector.py yuv 1''' or '''python3 bin_detection/bin_detector.py yuv 2''' 
+This is the main script that is called to get the segmented image and the bounding box of the blue bins in the given image. This code defines a class that has the methods segment_image and get_bounding_boxes that are used to get the masked image and the bounding boxes around the blue bins respectively.The code takes 2 inputs as arguments : the color space and the mode. Color space can either be rgb or yuv, mode is 1 for using a single gaussian discriminant model, and 2 for using a mixture of gaussian model. Usage : 
+'''
+$python3 bin_detection/bin_detector.py rgb 1
+'''
+'''
+$python3 bin_detection/bin_detector.py rgb 2
+'''
+'''
+$python3 bin_detection/bin_detector.py yuv 1
+''' 
+'''
+$python3 bin_detection/bin_detector.py yuv 2
+''' 
 
 2. pixel_classification : This directory contains all code files to classify given pixel as a red, green or blue pixel. 
 
@@ -58,12 +77,15 @@ pixel_classification/
 '''
 
 ### a. gaussian_classifier.py
-This script is used to train a single gaussian discriminant model on the red, green and blue class examples. Usage : '''python3 pixel_classifier/gaussian_classifier.py'''
+This script is used to train a single gaussian discriminant model on the red, green and blue class examples. Usage : 
+'''
+$python3 pixel_classifier/gaussian_classifier.py
+'''
 
 
 
 ## Technical Report
-* [Sambaran Ghosal. "Color Segementation and Object Detection" Feb 2022](report/Project1.pdf)
+* [Sambaran Ghosal. "Color Segementation and Object Detection" Feb 2022](report/ColorSegmentationAndBinDetection.pdf)
 
 ## Results
 
