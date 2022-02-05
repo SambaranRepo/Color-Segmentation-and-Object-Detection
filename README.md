@@ -68,7 +68,7 @@ pixel_classification/
 ├── pixel_classifier.py
 ├── requirements.txt
 └── test_pixel_classifier.py
-<pre>
+</pre>
 
 ### a. gaussian_classifier.py
 This script is used to train a single gaussian discriminant model on the red, green and blue class examples. Usage : 
