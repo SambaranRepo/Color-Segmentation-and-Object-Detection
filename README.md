@@ -118,7 +118,7 @@ Mode : Mixture of Gaussians
 
 
 ## Technical Report
-* [Sambaran Ghosal. "Color Segementation and Object Detection" Feb 2022](report/ColorSegmentationAndBinDetection.pdf)
+* [Sambaran Ghosal. "Color Segementation and Object Detection" Feb 2022](report/Project1.pdf)
 
 ## Results
 
